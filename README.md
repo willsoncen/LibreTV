@@ -49,14 +49,76 @@ Pull Bot 会反复触发无效的 PR 和垃圾邮件，严重干扰项目维护�
 
 ### Cloudflare Pages
 
-1. Fork 或克隆本仓库到您的 GitHub 账户
-2. 登录 [Cloudflare Dashboard](https://dash.cloudflare.com/)，进入 Pages 服务
-3. 点击"创建项目"，连接您的 GitHub 仓库
-4. 使用以下设置：
-   - 构建命令：留空（无需构建）
-   - 输出目录：留空（默认为根目录）
-5. **⚠️ 重要：在"设置" > "环境变量"中添加 `PASSWORD` 变量（必须设置）**
-6. 点击"保存并部署"
+#### 1) 准备仓库
+
+1. Fork 本仓库到你自己的 GitHub 账号（或直接使用你自己的仓库）
+2. 确认仓库根目录包含以下关键目录/文件：
+   - `index.html`
+   - `functions/`
+   - `api/`
+
+#### 2) 创建 Cloudflare Pages 项目
+
+1. 登录 [Cloudflare Dashboard](https://dash.cloudflare.com/)
+2. 进入 **Workers & Pages** → **Create application** → **Pages** → **Connect to Git**
+3. 选择你的 GitHub 仓库和分支（通常为 `main`）
+
+#### 3) 配置构建参数（关键）
+
+- Framework preset：`None`
+- Build command：留空（无需构建）
+- Build output directory：留空（使用仓库根目录）
+- Root directory：`/`（默认）
+
+> ⚠️ 注意：不要填写 `npx wrangler deploy`，否则会走 Worker 发布流程而不是 Pages Git 自动部署流程。
+
+#### 4) 配置环境变量（必须）
+
+在 Pages 项目 **Settings** → **Environment variables** 中，分别为 **Production** 与 **Preview** 配置：
+
+- 必填：
+  - `PASSWORD` = 你自定义的访问密码
+- 可选（建议）：
+  - `CACHE_TTL` = `86400`
+  - `MAX_RECURSION` = `5`
+  - `DEBUG` = `false`
+  - `USER_AGENTS_JSON` = `["Mozilla/5.0 ..."]`（可留空，系统会使用默认值）
+
+#### 5) 首次部署与验证
+
+1. 点击 **Save and Deploy**
+2. 等待部署完成后获取 `*.pages.dev` 域名
+3. 打开站点验证：
+   - 页面可正常打开
+   - 可正常搜索
+   - 可正常播放
+
+#### 6) 后续自动部署
+
+- 之后只要向绑定分支 push 代码，Cloudflare Pages 会自动重新部署
+- 如果你只修改了环境变量，建议手动触发一次 **Retry deployment**
+
+#### 7) 自定义域名（可选）
+
+1. 进入 Pages 项目 → **Custom domains**
+2. 添加你的域名
+3. 按提示自动或手动配置 DNS 记录，等待生效
+
+#### 8) 常见问题排查
+
+- 现象：提示“必须设置密码”或代理返回 401  
+  排查：确认 `PASSWORD` 已在对应环境（Production/Preview）正确设置
+
+- 现象：构建日志出现 `wrangler deploy`、上传 `node_modules` 或构建行为异常  
+  排查：清空 Build command 与 Build output directory，Framework preset 设为 `None`
+
+- 现象：页面未更新或行为异常  
+  排查：清理浏览器 Cookie/缓存后强制刷新（`Ctrl + F5`），并确认最新部署状态为成功
+
+#### 9) 说明：是否能只改仓库文件完成部署
+
+不能只靠仓库文件完成部署。  
+仓库仅提供代码与函数逻辑；Cloudflare Pages 的构建参数与环境变量必须在 Cloudflare 控制台项目设置中完成。
 
 ### Vercel
 
