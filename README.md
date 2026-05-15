@@ -66,7 +66,7 @@ Pull Bot 会反复触发无效的 PR 和垃圾邮件，严重干扰项目维护�
 #### 3) 配置构建参数（关键）
 
 - Framework preset：`None`
-- Build command：留空（无需构建）
+- Build command：留空（无需构建）；若平台**强制要求**填写，请填 `npm run build`
 - Build output directory：留空（使用仓库根目录）
 - Root directory：`/`（默认）
 
@@ -110,7 +110,7 @@ Pull Bot 会反复触发无效的 PR 和垃圾邮件，严重干扰项目维护�
   排查：确认 `PASSWORD` 已在对应环境（Production/Preview）正确设置
 
 - 现象：构建日志出现 `wrangler deploy`、上传 `node_modules` 或构建行为异常  
-  排查：清空 Build command 与 Build output directory，Framework preset 设为 `None`
+  排查：Build command 若需要填写请填 `npm run build`，否则清空；Build output directory 清空，Framework preset 设为 `None`
 
 - 现象：页面未更新或行为异常  
   排查：清理浏览器 Cookie/缓存后强制刷新（`Ctrl + F5`），并确认最新部署状态为成功
