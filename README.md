@@ -55,7 +55,7 @@ Pull Bot 会反复触发无效的 PR 和垃圾邮件，严重干扰项目维护�
 2. 确认仓库根目录包含以下关键目录/文件：
    - `index.html`
    - `functions/`
-   - `api/`
+3. 说明：Cloudflare Pages 主要使用 `functions/`；`api/` 目录用于其他平台（如 Vercel）路由。
 
 #### 2) 创建 Cloudflare Pages 项目
 
@@ -82,7 +82,7 @@ Pull Bot 会反复触发无效的 PR 和垃圾邮件，严重干扰项目维护�
   - `CACHE_TTL` = `86400`
   - `MAX_RECURSION` = `5`
   - `DEBUG` = `false`
-  - `USER_AGENTS_JSON` = `["Mozilla/5.0 ..."]`（可留空，系统会使用默认值）
+  - `USER_AGENTS_JSON` = `["Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"]` (可留空，系统会使用默认值)
 
 #### 5) 首次部署与验证
 
